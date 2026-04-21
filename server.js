@@ -2,12 +2,28 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 
-// 1. Tell Express to serve any HTML/CSS/JS files in this folder to the public
+// Tell Express where to find your static assets (like CSS/JS if you had them)
 app.use(express.static(__dirname));
 
-// 2. Set the "Front Door" - if they hit the main link, send them to login!
+// The Explicit Routes - Forcing Express to serve the exact files
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/arena.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'arena.html'));
+});
+
+app.get('/spectate.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'spectate.html'));
+});
+
+app.get('/leaderboard.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'leaderboard.html'));
 });
 const cors = require('cors');
 const http = require('http');
