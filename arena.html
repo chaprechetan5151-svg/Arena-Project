@@ -24,7 +24,7 @@
     <textarea id="editor" placeholder="Start architecting your solution..."></textarea>
 
     <script>
-        const socket = io('http://localhost:3000');
+        const socket = io();
         const editor = document.getElementById('editor');
         const charCount = document.getElementById('char-count');
 
@@ -49,7 +49,7 @@
             }
 
             try {
-                const response = await fetch('http://localhost:3000/api/match-result', {
+                const response = await fetch('/api/match-result', {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',

@@ -1,31 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Spectator View | Live Engineering</title>
+    <title>Spectator View | LIVE</title>
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <style>
         body { background: #020617; color: #10b981; padding: 40px; font-family: 'Fira Code', monospace; }
-        #live-view { white-space: pre-wrap; background: #0f172a; padding: 30px; border-radius: 12px; border: 1px solid #1e293b; min-height: 500px; box-shadow: 0 0 50px rgba(16, 185, 129, 0.1); }
+        .grid-container { display: flex; gap: 20px; }
+        .arena-view { flex: 3; }
+        .sidebar { flex: 1; background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #3b82f6; height: fit-content; }
+        #live-view { white-space: pre-wrap; background: #0f172a; padding: 30px; border-radius: 12px; border: 1px solid #1e293b; min-height: 500px; box-shadow: 0 0 50px rgba(16, 185, 129, 0.1); font-size: 18px; }
         .cursor { border-left: 8px solid #10b981; animation: blink 1s infinite; }
         @keyframes blink { 50% { opacity: 0; } }
+        .leaderboard-entry { margin-bottom: 10px; font-size: 16px; color: #e2e8f0; }
+        .rank-gold { color: #fbbf24; font-weight: bold; }
     </style>
 </head>
 <body>
-    <h1>📺 SPECTATING: Chetan_Dev</h1>
-    <div id="live-view">Waiting for competitor to type...<span class="cursor"></span></div>
+    <div class="grid-container">
+        <div class="arena-view">
+            <h1>📺 LIVE: Spectator View</h1>
+            <div id="live-view">Waiting for competitor to type...<span class="cursor"></span></div>
+        </div>
+
+        <div class="sidebar">
+            <h3 style="color: #fbbf24; margin-top: 0;">🏆 Arena Standings</h3>
+            <div id="mini-leaderboard">Loading rankings...</div>
+        </div>
+    </div>
 
     <script>
-        const socket = io('http://localhost:3000');
+        // 1. Connect to Server (Production Ready)
+        const socket = io(); 
         const view = document.getElementById('live-view');
 
-        // LISTEN: Receive code updates from the server
+        // 2. Listen for typing events
         socket.on('live-code-update', (incomingCode) => {
             view.innerText = incomingCode;
-            // Re-add the cursor effect
             const cursor = document.createElement('span');
             cursor.className = 'cursor';
             view.appendChild(cursor);
         });
+
+        // 3. Keep the leaderboard updated
+        async function updateLeaderboard() {
+            try {
+                // Production Ready URL
+                const res = await fetch('/api/leaderboard');
+                const players = await res.json();
+                document.getElementById('mini-leaderboard').innerHTML = players.map((p, i) => 
+                    `<div class="leaderboard-entry">
+                        <span class="${i === 0 ? 'rank-gold' : ''}">#${i+1} ${p.username}</span> 
+                        <br><small>Rating: ${p.global_rating}</small>
+                    </div>`
+                ).join('');
+            } catch (err) {
+                console.error("Leaderboard fetch failed.");
+            }
+        }
+        
+        updateLeaderboard();
+        setInterval(updateLeaderboard, 5000); // Refresh every 5 seconds
     </script>
 </body>
 </html>
