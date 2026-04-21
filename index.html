@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Live Engineering Arena | Join</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .card { background: #1e293b; padding: 2rem; border-radius: 8px; width: 300px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5); }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: none; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <div style="display: flex; gap: 20px;">
+        <div style="flex: 3;">
+            <h1 id="match-title">📺 LIVE: Chetan_Dev</h1>
+            <div id="live-view">Waiting for competitor...<span class="cursor"></span></div>
+        </div>
+
+        <div style="flex: 1; background: #1e293b; padding: 20px; border-radius: 12px; border: 1px solid #3b82f6;">
+            <h3 style="color: #fbbf24; margin-top: 0;">🏆 Top Arena Engineers</h3>
+            <div id="mini-leaderboard" style="font-size: 14px;">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const socket = io('http://localhost:3000');
+        const view = document.getElementById('live-view');
+
+        // 1. Listen for Live Code
+        socket.on('live-code-update', (incomingCode) => {
+            view.innerText = incomingCode;
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            view.appendChild(cursor);
+        });
+
+        // 2. Fetch Leaderboard Data
+        async function updateLeaderboard() {
+            const res = await fetch('http://localhost:3000/api/leaderboard');
+            const players = await res.json();
+            document.getElementById('mini-leaderboard').innerHTML = players.map((p, i) => 
+                `<div style="margin-bottom:10px;">#${i+1} <b>${p.username}</b> - ${p.global_rating}</div>`
+            ).join('');
+        }
+        updateLeaderboard();
+        setInterval(updateLeaderboard, 10000); // Refresh every 10 seconds
+    </script>
+</body>

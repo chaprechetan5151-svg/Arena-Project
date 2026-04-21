@@ -1,0 +1,17 @@
+# 🚀 Time-Dilation Arena
+**Real-Time Competitive Coding Spectator Sport**
+
+## 🏟️ Overview
+A full-stack platform where developers compete in live coding matches. Spectators can watch the logic unfold in real-time with sub-50ms latency, while a PostgreSQL backend tracks global ELO ratings.
+
+## 🛠️ Tech Stack
+- **Frontend:** HTML5, CSS3 (Cyber-Glow UI), Socket.io Client
+- **Backend:** Node.js, Express.js
+- **Real-Time:** WebSockets (Socket.io)
+- **Database:** PostgreSQL (Relational schema for Matches & Users)
+- **Security:** Bcrypt (Password Hashing) & JWT (Authentication)
+
+## ⚡ Key Features
+- **Instant Broadcast:** Every keystroke is emitted via WebSockets to all connected spectators.
+- **Global Leaderboard:** Live-updating standings pulled directly from the DB.
+- **Secure Cockpit:** Only authenticated competitors can enter the Arena to broadcast code.

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Arena Leaderboard</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #0f172a; color: white; padding: 50px; }
+        .leaderboard-table { width: 100%; max-width: 600px; margin: auto; border-collapse: collapse; background: #1e293b; border-radius: 8px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #3b82f6; color: white; }
+        tr:hover { background: #334155; }
+        .rank { font-weight: bold; color: #fbbf24; }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">🏆 Global Standings</h1>
+    <table class="leaderboard-table">
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Competitor</th>
+                <th>Rating</th>
+                <th>Matches</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+            </tbody>
+    </table>
+
+    <script>
+        async function loadLeaderboard() {
+            const response = await fetch('http://localhost:3000/api/leaderboard');
+            const players = await response.json();
+            const tableBody = document.getElementById('leaderboard-body');
+
+            tableBody.innerHTML = players.map((player, index) => `
+                <tr>
+                    <td class="rank">#${index + 1}</td>
+                    <td>${player.username}</td>
+                    <td>${player.global_rating}</td>
+                    <td>${player.matches_played}</td>
+                </tr>
+            `).join('');
+        }
+        loadLeaderboard();
+    </script>
+</body>
+</html>

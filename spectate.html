@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Spectator View | Live Engineering</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <style>
+        body { background: #020617; color: #10b981; padding: 40px; font-family: 'Fira Code', monospace; }
+        #live-view { white-space: pre-wrap; background: #0f172a; padding: 30px; border-radius: 12px; border: 1px solid #1e293b; min-height: 500px; box-shadow: 0 0 50px rgba(16, 185, 129, 0.1); }
+        .cursor { border-left: 8px solid #10b981; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <h1>📺 SPECTATING: Chetan_Dev</h1>
+    <div id="live-view">Waiting for competitor to type...<span class="cursor"></span></div>
+
+    <script>
+        const socket = io('http://localhost:3000');
+        const view = document.getElementById('live-view');
+
+        // LISTEN: Receive code updates from the server
+        socket.on('live-code-update', (incomingCode) => {
+            view.innerText = incomingCode;
+            // Re-add the cursor effect
+            const cursor = document.createElement('span');
+            cursor.className = 'cursor';
+            view.appendChild(cursor);
+        });
+    </script>
+</body>
+</html>
