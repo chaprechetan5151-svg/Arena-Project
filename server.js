@@ -1,5 +1,45 @@
 require('dotenv').config();
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const path = require('path'); // Add this up with the requires
+
+// 1. INITIALIZE APP FIRST
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server, { cors: { origin: "*" } });
+
+// 2. NOW YOU CAN USE APP
+app.use(cors());
+app.use(express.json());
+app.use(express.static(__dirname));
+
+// 3. THE EXPLICIT ROUTES
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/login.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
+
+app.get('/arena.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'arena.html'));
+});
+
+app.get('/spectate.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'spectate.html'));
+});
+
+app.get('/leaderboard.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'leaderboard.html'));
+});
+
+// ... The rest of your database and API code goes down here ...
 const path = require('path');
 
 // Tell Express where to find your static assets (like CSS/JS if you had them)
