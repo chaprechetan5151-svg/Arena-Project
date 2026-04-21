@@ -1,5 +1,14 @@
 require('dotenv').config();
 const express = require('express');
+const path = require('path');
+
+// 1. Tell Express to serve any HTML/CSS/JS files in this folder to the public
+app.use(express.static(__dirname));
+
+// 2. Set the "Front Door" - if they hit the main link, send them to login!
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'login.html'));
+});
 const cors = require('cors');
 const http = require('http');
 const { Server } = require('socket.io');
