@@ -23,27 +23,18 @@
         </div>
     </div>
 
-    <script>
-        const socket = io('http://localhost:3000');
-        const view = document.getElementById('live-view');
+    <script src="/socket.io/socket.io.js"></script>
 
-        // 1. Listen for Live Code
-        socket.on('live-code-update', (incomingCode) => {
-            view.innerText = incomingCode;
-            const cursor = document.createElement('span');
-            cursor.className = 'cursor';
-            view.appendChild(cursor);
-        });
+<script>
+    // 1. Connect to the server
+    const socket = io();
 
-        // 2. Fetch Leaderboard Data
-        async function updateLeaderboard() {
-            const res = await fetch('http://localhost:3000/api/leaderboard');
-            const players = await res.json();
-            document.getElementById('mini-leaderboard').innerHTML = players.map((p, i) => 
-                `<div style="margin-bottom:10px;">#${i+1} <b>${p.username}</b> - ${p.global_rating}</div>`
-            ).join('');
-        }
-        updateLeaderboard();
-        setInterval(updateLeaderboard, 10000); // Refresh every 10 seconds
-    </script>
-</body>
+    // 2. Find your text box (Make sure the ID matches your actual HTML textarea ID!)
+    const codeEditor = document.getElementById('code-editor'); 
+
+    // 3. Every time you press a key, send the text to the server
+    codeEditor.addEventListener('input', (event) => {
+        const textInsideBox = event.target.value;
+        socket.emit('coding', textInsideBox); // This MUST match the word 'coding' in server.js
+    });
+</script>

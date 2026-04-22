@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>Spectator View | LIVE</title>
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://socket.io/socket.io.js"></script>
     <style>
         body { background: #020617; color: #10b981; padding: 40px; font-family: 'Fira Code', monospace; }
         .grid-container { display: flex; gap: 20px; }
@@ -60,6 +60,61 @@
         
         updateLeaderboard();
         setInterval(updateLeaderboard, 5000); // Refresh every 5 seconds
+    </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arena | Spectator</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+    :root {
+        --matrix-green: #10b981;
+        --green-glow: 0 0 20px rgba(16, 185, 129, 0.2);
+    }
+    body { 
+        background: #020617; 
+        color: var(--matrix-green); 
+        padding: 40px; 
+        font-family: 'Fira Code', monospace; 
+        line-height: 1.5;
+    }
+    h1 {
+        text-transform: uppercase;
+        letter-spacing: 4px;
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        text-shadow: var(--green-glow);
+    }
+    #view { 
+        white-space: pre-wrap; 
+        background: rgba(15, 23, 42, 0.8); 
+        padding: 40px; 
+        border-radius: 15px; 
+        min-height: 500px; 
+        font-size: 19px; 
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: var(--green-glow), inset 0 0 20px rgba(0,0,0,0.5);
+        position: relative;
+    }
+    /* Blinking Cursor Effect for the spectator */
+    #view::after {
+        content: "_";
+        animation: blink 1s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+    <h1>📺 LIVE Spectator View</h1>
+    <div id="view">Waiting for competitor...</div>
+    <script>
+        const socket = io();
+        const view = document.getElementById('view');
+        socket.on('live-code-update', (data) => {
+            view.innerText = data;
+        });
     </script>
 </body>
 </html>
