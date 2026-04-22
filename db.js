@@ -1,25 +1,19 @@
 const { Pool } = require('pg');
-require('dotenv').config();
 
+// 1. Hardcode the URL directly to test the connection
 const pool = new Pool({
-    user: process.env.DB_USER,
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    password: process.env.DB_PASSWORD,
-    port: process.env.DB_PORT,
-});
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: "postgresql://neondb_owner:npg_6uWRT9NLGEZI@ep-wild-bird-an5y6lvq-pooler.c-6.us-east-1.aws.neon.tech/neondb?sslmode=require",
     ssl: {
-        rejectUnauthorized: false // Required for cloud providers like Neon/Render
+        rejectUnauthorized: false
     }
 });
 
+// 2. Test the connection on boot
 pool.connect()
     .then(() => console.log('🟢 [DATABASE] PostgreSQL bridge is active.'))
     .catch(err => console.error('🔴 [DATABASE] Connection failed!', err.stack));
 
-module.exports = pool;
+// 3. Export
 module.exports = {
     query: (text, params) => pool.query(text, params),
 };
